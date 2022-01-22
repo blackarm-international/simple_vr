@@ -145,63 +145,35 @@ function init() {
   window.addEventListener('resize', onWindowResize);
 }
 function render() {
+  // @ts-ignore
+  let direction = new THREE.Vector3();
   renderer.render(scene, camera);
   // @ts-ignore
   const session = renderer.xr.getSession();
-  // check if the session exists
+  // snap turns with left joystick horizontal
   if (session) {
-    const sources = session.inputSources;
-    // check if the session has input sources
-    if (sources){
-      const controllerLeft = sources[0];
-      // check that input source zero exists
-      if (controllerLeft){
-        const gamepad = controllerLeft.gamepad;
-        // check that input source zero has a gamepad
-        if (gamepad){
-          const axes = gamepad.axes;
-          // check that gamepad has axes
-          if (axes){
-            // snap turn
-            if (axes[2] < -0.8 && turnEnabled == true){
-              player.rotation.y += Math.PI * 0.25;
-              turnEnabled = false;
-            }
-            if (axes[2] > 0.8 && turnEnabled == true){
-              player.rotation.y -= Math.PI * 0.25;
-              turnEnabled = false;
-            }
-            if (axes[2] > -0.2 && axes[2] < 0.2){
-              turnEnabled = true;
-            }
-          }
-        }
+    let joystickLeftHoriz = session.inputSources[0].gamepad.axes[2];
+    if (joystickLeftHoriz) {
+      if (joystickLeftHoriz < -0.7 && turnEnabled == true){
+        player.rotation.y += Math.PI * 0.25;
+        turnEnabled = false;
       }
-      // right hand controller
-      const controllerRight = sources[1];
-      // check that input source zero exists
-      if (controllerLeft){
-        const gamepad = controllerRight.gamepad;
-        // check that input source zero has a gamepad
-        if (gamepad){
-          const axes = gamepad.axes;
-          // check that gamepad has axes
-          if (axes){
-            // strafe
-            if (axes[2] < -0.05 || axes[2] > 0.05){
-              // @ts-ignore
-              const direction = new THREE.Vector3();
-              headset.getWorldDirection(direction);
-              // @ts-ignore
-              const yAxis = new THREE.Vector3(0, 1, 0);
-              const angle = Math.PI * -0.5;
-              direction.applyAxisAngle(yAxis, angle);
-              player.position.x += (direction.x * axes[2] * 0.01);
-              player.position.z += (direction.z * axes[2] * 0.01);
-            }
-          }
-        }
+      if (joystickLeftHoriz > 0.7 && turnEnabled == true){
+        player.rotation.y -= Math.PI * 0.25;
+        turnEnabled = false;
       }
+      if (joystickLeftHoriz > -0.4 && joystickLeftHoriz < 0.4){
+        turnEnabled = true;
+      }
+    }
+  }
+  // forward/backward with right joystick horizontal
+  if (session) {
+    let joystickRightHoriz = session.inputSources[1].gamepad.axes[2];
+    if (joystickRightHoriz < -0.01 || joystickRightHoriz > 0.01){
+      headset.getWorldDirection(direction);
+      player.position.x += (direction.x * joystickRightHoriz * 0.08);
+      player.position.z += (direction.z * joystickRightHoriz * 0.08);
     }
   }
 }
