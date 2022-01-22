@@ -20,8 +20,13 @@ else
   exit
 fi
 
+# clean up client.js
+grep -Ev 'use strict|ts-ignore' < client.js | sed 's/    /  /g' > clean.js
+mv clean.js client.js
+
+# build test.html
 cat source.html > ../test.html
-grep -Ev 'use strict|ts-ignore' < client.js | sed 's/    /  /g' | sed 's/^/      /' >> ../test.html
+sed 's/^/      /' < client.js >> ../test.html
 echo '    </script>' >> ../test.html
 echo '  </body>' >> ../test.html
 echo '</html>' >> ../test.html

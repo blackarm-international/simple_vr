@@ -95,6 +95,24 @@ function init() {
   line.scale.z = 5;
   controller1.add(line.clone());
   controller2.add(line.clone());
+  // add cuboid
+  // @ts-ignore
+  const boxX = 1;
+  const boxY = 2;
+  const boxZ = 3;
+  // @ts-ignore
+  const boxGeometry = new THREE.BoxGeometry(boxX, boxY, boxZ);
+  // @ts-ignore
+  const boxMaterial = new THREE.MeshStandardMaterial();
+  // @ts-ignore
+  boxMaterial.color.setRGB(0.5, 0.5, 0.5);
+  // @ts-ignore
+  const boxMesh = new THREE.Mesh(boxGeometry, boxMaterial);
+  boxMesh.position.x = 1;
+  boxMesh.position.y = 1;
+  boxMesh.position.z = 0;
+  boxMesh.name = 'testing';
+  scene.add(boxMesh);
   window.addEventListener('resize', onWindowResize);
 }
 function render() {
