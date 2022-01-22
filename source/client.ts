@@ -153,7 +153,7 @@ function render() {
     const sources = session.inputSources;
     // check if the session has input sources
     if (sources){
-      const controllerLeft = sources[1];
+      const controllerLeft = sources[0];
       // check that input source zero exists
       if (controllerLeft){
         const gamepad = controllerLeft.gamepad;
@@ -162,7 +162,7 @@ function render() {
           const axes = gamepad.axes;
           // check that gamepad has axes
           if (axes){
-            // rotate
+            // snap turn
             if (axes[2] < -0.8 && turnEnabled == true){
               player.rotation.y += Math.PI * 0.25;
               turnEnabled = false;
@@ -188,23 +188,16 @@ function render() {
           // check that gamepad has axes
           if (axes){
             // strafe
-            if (axes[2] < -0.1 || axes[2] > 0.1){
+            if (axes[2] < -0.05 || axes[2] > 0.05){
               // @ts-ignore
               const direction = new THREE.Vector3();
               headset.getWorldDirection(direction);
               // @ts-ignore
               const yAxis = new THREE.Vector3(0, 1, 0);
-              const angle = Math.PI / 2;
+              const angle = Math.PI * -0.5;
               direction.applyAxisAngle(yAxis, angle);
               player.position.x += (direction.x * axes[2] * 0.01);
               player.position.z += (direction.z * axes[2] * 0.01);
-            }
-            if (axes[2] > 0.8 && turnEnabled == true){
-              player.rotation.y -= Math.PI * 0.25;
-              turnEnabled = false;
-            }
-            if (axes[2] > -0.2 && axes[2] < 0.2){
-              turnEnabled = true;
             }
           }
         }

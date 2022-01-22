@@ -123,29 +123,22 @@ function init() {
 }
 function render() {
   renderer.render(scene, camera);
-  const direction = new THREE.Vector3();
-  headset.getWorldDirection(direction);
-  // const yAxis = new THREE.Vector3(0, 1, 0);
-  // const angle = Math.PI / 2;
-  // direction.applyAxisAngle(yAxis, angle);
-  player.position.x += (direction.x * 0.01);
-  player.position.z += (direction.z * 0.01);
   const session = renderer.xr.getSession();
   // check if the session exists
   if (session) {
     const sources = session.inputSources;
     // check if the session has input sources
     if (sources) {
-      const controllerZero = sources[1];
+      const controllerLeft = sources[0];
       // check that input source zero exists
-      if (controllerZero) {
-        const gamepad = controllerZero.gamepad;
+      if (controllerLeft) {
+        const gamepad = controllerLeft.gamepad;
         // check that input source zero has a gamepad
         if (gamepad) {
           const axes = gamepad.axes;
           // check that gamepad has axes
           if (axes) {
-            // rotate
+            // snap turn
             if (axes[2] < -0.8 && turnEnabled == true) {
               player.rotation.y += Math.PI * 0.25;
               turnEnabled = false;
@@ -157,26 +150,29 @@ function render() {
             if (axes[2] > -0.2 && axes[2] < 0.2) {
               turnEnabled = true;
             }
-            //player.rotation.y += axes[2] * -0.01;
-            // up/down
-            //if (axes.length > 5){
-            //  player.position.z = 5;
-            //}
-            /*
-                  if (axes[0] != 0){
-                    //player.position.z = axes[0] * 2;
-                  }
-                  if (axes[1] != 0){
-                    //player.position.z = axes[1] * 2;
-                  }
-                  if (axes[2] != 0){
-                    */
-            /*
-                  }
-                  if (axes[3] != 0){
-                    //player.position.z = axes[3] * 2;
-                  }
-                  */
+          }
+        }
+      }
+      // right hand controller
+      const controllerRight = sources[1];
+      // check that input source zero exists
+      if (controllerLeft) {
+        const gamepad = controllerRight.gamepad;
+        // check that input source zero has a gamepad
+        if (gamepad) {
+          const axes = gamepad.axes;
+          // check that gamepad has axes
+          if (axes) {
+            // strafe
+            if (axes[2] < -0.05 || axes[2] > 0.05) {
+              const direction = new THREE.Vector3();
+              headset.getWorldDirection(direction);
+              const yAxis = new THREE.Vector3(0, 1, 0);
+              const angle = Math.PI * -0.5;
+              direction.applyAxisAngle(yAxis, angle);
+              player.position.x += (direction.x * axes[2] * 0.01);
+              player.position.z += (direction.z * axes[2] * 0.01);
+            }
           }
         }
       }
