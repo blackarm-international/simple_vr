@@ -9,7 +9,6 @@ let controller2: any;
 let controllerGrip1: any;
 let controllerGrip2: any;
 let controls: any;
-
 function onWindowResize() {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
@@ -104,6 +103,5 @@ function render() {
 function animate() {
   renderer.setAnimationLoop(render);
 }
-
 init();
 animate();
