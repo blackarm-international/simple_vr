@@ -1,15 +1,15 @@
 "use strict";
-var container;
-var camera;
-var scene;
-var renderer;
-var hand1;
-var hand2;
-var controller1;
-var controller2;
-var controllerGrip1;
-var controllerGrip2;
-var controls;
+let container;
+let camera;
+let scene;
+let renderer;
+let hand1;
+let hand2;
+let controller1;
+let controller2;
+let controllerGrip1;
+let controllerGrip2;
+let controls;
 function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
@@ -30,18 +30,18 @@ function init() {
     controls.target.set(0, 1.6, 0);
     controls.update();
     // @ts-ignore
-    var floorGeometry = new THREE.PlaneGeometry(4, 4);
+    const floorGeometry = new THREE.PlaneGeometry(4, 4);
     // @ts-ignore
-    var floorMaterial = new THREE.MeshStandardMaterial({ color: 0x222222 });
+    const floorMaterial = new THREE.MeshStandardMaterial({ color: 0x222222 });
     // @ts-ignore
-    var floor = new THREE.Mesh(floorGeometry, floorMaterial);
+    const floor = new THREE.Mesh(floorGeometry, floorMaterial);
     floor.rotation.x = -Math.PI / 2;
     floor.receiveShadow = true;
     scene.add(floor);
     // @ts-ignore
     scene.add(new THREE.HemisphereLight(0x808080, 0x606060));
     // @ts-ignore
-    var light = new THREE.DirectionalLight(0xffffff);
+    const light = new THREE.DirectionalLight(0xffffff);
     light.position.set(0, 6, 0);
     light.castShadow = true;
     light.shadow.camera.top = 2;
@@ -67,9 +67,9 @@ function init() {
     controller2 = renderer.xr.getController(1);
     scene.add(controller2);
     // @ts-ignore
-    var controllerModelFactory = new XRControllerModelFactory();
+    const controllerModelFactory = new XRControllerModelFactory();
     // @ts-ignore
-    var handModelFactory = new XRHandModelFactory();
+    const handModelFactory = new XRHandModelFactory();
     // Hand 1
     controllerGrip1 = renderer.xr.getControllerGrip(0);
     controllerGrip1.add(controllerModelFactory.createControllerModel(controllerGrip1));
@@ -85,13 +85,13 @@ function init() {
     hand2.add(handModelFactory.createHandModel(hand2));
     scene.add(hand2);
     // @ts-ignore
-    var tempVector1 = new THREE.Vector3(0, 0, 0);
+    const tempVector1 = new THREE.Vector3(0, 0, 0);
     // @ts-ignore
-    var tempVector2 = new THREE.Vector3(0, 0, -1);
+    const tempVector2 = new THREE.Vector3(0, 0, -1);
     // @ts-ignore
-    var geometry = new THREE.BufferGeometry().setFromPoints([tempVector1, tempVector2]);
+    const geometry = new THREE.BufferGeometry().setFromPoints([tempVector1, tempVector2]);
     // @ts-ignore
-    var line = new THREE.Line(geometry);
+    const line = new THREE.Line(geometry);
     line.name = 'line';
     line.scale.z = 5;
     controller1.add(line.clone());
