@@ -23,7 +23,22 @@ function init() {
   scene.background = new THREE.Color(0x444444);
   // @ts-ignore
   camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 10);
-  camera.position.set(0, 1.6, 3);
+  camera.position.set(-2, 1.8, -2);
+  // camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.01, 1000);
+  // // @ts-ignore
+  // controls = new THREE.PointerLockControls(camera, document.body);
+  // locationRotation = {
+  //     xPos: -4.0,
+  //     yPos: 1.8,
+  //     zPos: -4.0,
+  //     xRot: 0.0,
+  //     yRot: -2.356194525,
+  //     zRot: 0.0
+  // };
+  // controls.getObject().position.set(locationRotation.xPos,
+  // locationRotation.yPos, locationRotation.zPos);
+  // controls.getObject().rotation.order = 'YXZ';
+  // controls.getObject().rotation.set(locationRotation.xRot, locationRotation.yRot,
   // @ts-ignore
   controls = new OrbitControls(camera, container);
   controls.target.set(0, 1.6, 0);
