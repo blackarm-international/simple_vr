@@ -61,8 +61,8 @@ function init() {
   user = new THREE.Group();
   scene.add(user);
   user.add(camera);
-  user.position.set(-1, 0, -1);
-  user.rotation.y = (Math.PI * 1.25);
+  user.position.set(-1, 0, 0);
+  user.rotation.y = (Math.PI * 1.5);
   // @ts-ignore
   const floorGeometry = new THREE.PlaneGeometry(8, 14);
   // @ts-ignore
@@ -139,21 +139,18 @@ function init() {
   // add boxes
   addBoxes();
   window.addEventListener('resize', onWindowResize);
-  // this.renderer.xr.addEventListener('sessionstart', async () => {
-  //   this.user = new THREE.Group()
-  //   this.scene.add(this.user)
-  //   this.user.add(this.camera)
-  //   this.user.position.set(-1, 1.8, -1)
-  // });
-  // this.renderer.xr.addEventListener('sessionend', function (event) {
-  //     this.user.remove(this.camera)
-  //     this.scene.remove(this.user)
-  //     this.user = null
-  //     this.camera.position.set(-1, 1.8, -1)
-  // });
 }
 function render() {
   renderer.render(scene, camera);
+  // @ts-ignore
+  const direction = new THREE.Vector3();
+  camera.getWorldDirection(direction);
+  // @ts-ignore
+  const yAxis = new THREE.Vector3(0, 1, 0);
+  const angle = Math.PI / 2;
+  direction.applyAxisAngle(yAxis, angle);
+  user.position.x += (direction.x * 0.01);
+  user.position.z += (direction.z * 0.01);
 }
 function animate() {
   renderer.setAnimationLoop(render);
