@@ -97,9 +97,9 @@ function init() {
   controller2.add(line.clone());
   // add cuboid
   // @ts-ignore
-  const boxX = 1;
-  const boxY = 2;
-  const boxZ = 3;
+  const boxX = 0.1;
+  const boxY = 0.2;
+  const boxZ = 0.3;
   // @ts-ignore
   const boxGeometry = new THREE.BoxGeometry(boxX, boxY, boxZ);
   // @ts-ignore
@@ -113,6 +113,10 @@ function init() {
   boxMesh.position.z = 0;
   boxMesh.name = 'testing';
   scene.add(boxMesh);
+  // add axis
+  // @ts-ignore
+  const axisHelper = new THREE.AxisHelper(0.1);
+  scene.add(axisHelper);
   window.addEventListener('resize', onWindowResize);
 }
 function render() {
