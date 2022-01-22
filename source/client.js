@@ -8,29 +8,40 @@ let controller1;
 let controller2;
 let controllerGrip1;
 let controllerGrip2;
-let controls;
+let user;
+// let controls: any;
 function onWindowResize() {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
 }
 function addBoxes() {
-  let boxX = 0.0;
-  const boxY = 1.8;
-  const boxZ = 0.0;
+  let boxX = 0.4;
+  const boxY = 1;
+  let boxZ = 0.4;
+  let colorBlue = 0;
+  let colorGreen = 0;
+  let colorRed = 0;
   let boxGeometry;
-  const boxMaterial = new THREE.MeshStandardMaterial();
+  let boxMaterial;
   let boxMesh;
-  for (let loop = 0; loop < 10; loop += 1) {
-    boxX = loop;
-    boxGeometry = new THREE.BoxGeometry(0.1, 0.5, 0.1);
-    boxMesh = new THREE.Mesh(boxGeometry, boxMaterial);
-    boxMaterial.color.setRGB(0.5, 0.5, 0.5);
-    boxMesh.position.x = boxX;
-    boxMesh.position.y = boxY;
-    boxMesh.position.z = boxZ;
-    boxMesh.name = 'testing';
-    scene.add(boxMesh);
+  for (let xloop = 0; xloop < 7; xloop += 1) {
+    for (let yloop = 0; yloop < 7; yloop += 1) {
+      boxX = 1 + (xloop * 1.0);
+      boxZ = 1 + (yloop * 2.0);
+      boxGeometry = new THREE.BoxGeometry(0.95, 2, 0.95);
+      boxMesh = new THREE.Mesh(boxGeometry, boxMaterial);
+      boxMaterial = new THREE.MeshStandardMaterial();
+      colorBlue = 0.5 + (Math.random() * 0.5);
+      colorGreen = 0.5 + (Math.random() * 0.5);
+      colorRed = 0.5 + (Math.random() * 0.5);
+      boxMaterial.color.setRGB(colorRed, colorGreen, colorBlue);
+      boxMesh.position.x = boxX;
+      boxMesh.position.y = boxY;
+      boxMesh.position.z = boxZ;
+      boxMesh.name = 'testing';
+      scene.add(boxMesh);
+    }
   }
 }
 function init() {
@@ -38,29 +49,18 @@ function init() {
   document.body.appendChild(container);
   scene = new THREE.Scene();
   scene.background = new THREE.Color(0x444444);
-  camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 10);
-  camera.position.set(-2, 1.8, -2);
-  // camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.01, 1000);
-  // controls = new THREE.PointerLockControls(camera, document.body);
-  // locationRotation = {
-  //   xPos: -4.0,
-  //   yPos: 1.8,
-  //   zPos: -4.0,
-  //   xRot: 0.0,
-  //   yRot: -2.356194525,
-  //   zRot: 0.0
-  // };
-  // controls.getObject().position.set(locationRotation.xPos,
-  // locationRotation.yPos, locationRotation.zPos);
-  // controls.getObject().rotation.order = 'YXZ';
-  // controls.getObject().rotation.set(locationRotation.xRot, locationRotation.yRot,
-  controls = new OrbitControls(camera, container);
-  controls.target.set(0, 1.6, 0);
-  controls.update();
-  const floorGeometry = new THREE.PlaneGeometry(4, 4);
+  camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 100);
+  user = new THREE.Group();
+  scene.add(user);
+  user.add(camera);
+  user.position.set(-1, 0, -1);
+  user.rotation.y = (Math.PI * 1.25);
+  const floorGeometry = new THREE.PlaneGeometry(8, 14);
   const floorMaterial = new THREE.MeshStandardMaterial({ color: 0x222222 });
   const floor = new THREE.Mesh(floorGeometry, floorMaterial);
   floor.rotation.x = -Math.PI / 2;
+  floor.position.x = 4;
+  floor.position.z = 7;
   floor.receiveShadow = true;
   scene.add(floor);
   scene.add(new THREE.HemisphereLight(0x808080, 0x606060));
@@ -83,25 +83,25 @@ function init() {
   document.body.appendChild(VRButton.createButton(renderer));
   // controllers
   controller1 = renderer.xr.getController(0);
-  scene.add(controller1);
+  user.add(controller1);
   controller2 = renderer.xr.getController(1);
-  scene.add(controller2);
+  user.add(controller2);
   const controllerModelFactory = new XRControllerModelFactory();
   const handModelFactory = new XRHandModelFactory();
   // Hand 1
   controllerGrip1 = renderer.xr.getControllerGrip(0);
   controllerGrip1.add(controllerModelFactory.createControllerModel(controllerGrip1));
-  scene.add(controllerGrip1);
+  user.add(controllerGrip1);
   hand1 = renderer.xr.getHand(0);
   hand1.add(handModelFactory.createHandModel(hand1));
-  scene.add(hand1);
+  user.add(hand1);
   // Hand 2
   controllerGrip2 = renderer.xr.getControllerGrip(1);
   controllerGrip2.add(controllerModelFactory.createControllerModel(controllerGrip2));
-  scene.add(controllerGrip2);
+  user.add(controllerGrip2);
   hand2 = renderer.xr.getHand(1);
   hand2.add(handModelFactory.createHandModel(hand2));
-  scene.add(hand2);
+  user.add(hand2);
   const tempVector1 = new THREE.Vector3(0, 0, 0);
   const tempVector2 = new THREE.Vector3(0, 0, -1);
   const geometry = new THREE.BufferGeometry().setFromPoints([tempVector1, tempVector2]);
@@ -111,11 +111,23 @@ function init() {
   controller1.add(line.clone());
   controller2.add(line.clone());
   // add axis
-  const axisHelper = new THREE.AxisHelper(0.1);
+  const axisHelper = new THREE.AxisHelper(1);
   scene.add(axisHelper);
   // add boxes
   addBoxes();
   window.addEventListener('resize', onWindowResize);
+  // this.renderer.xr.addEventListener('sessionstart', async () => {
+  //   this.user = new THREE.Group()
+  //   this.scene.add(this.user)
+  //   this.user.add(this.camera)
+  //   this.user.position.set(-1, 1.8, -1)
+  // });
+  // this.renderer.xr.addEventListener('sessionend', function (event) {
+  //   this.user.remove(this.camera)
+  //   this.scene.remove(this.user)
+  //   this.user = null
+  //   this.camera.position.set(-1, 1.8, -1)
+  // });
 }
 function render() {
   renderer.render(scene, camera);
