@@ -4,11 +4,13 @@ let scene: any;
 let renderer: any;
 let hand1: any;
 let hand2: any;
+let headset: any;
 let controller1: any;
 let controller2: any;
 let controllerGrip1: any;
 let controllerGrip2: any;
-let user: any;
+let player: any;
+let turnEnabled: boolean = true;
 // let controls: any;
 function onWindowResize() {
   camera.aspect = window.innerWidth / window.innerHeight;
@@ -57,12 +59,12 @@ function init() {
   scene.background = new THREE.Color(0x444444);
   // @ts-ignore
   camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 100);
-  camera.rotation.y = (Math.PI * 1.5);
   // @ts-ignore
-  user = new THREE.Group();
-  scene.add(user);
-  user.add(camera);
-  user.position.set(-1, 0, 0);
+  player = new THREE.Group();
+  scene.add(player);
+  player.add(camera);
+  player.position.set(-1, 0, 0);
+  player.rotation.y = (Math.PI * 1.5);
   // @ts-ignore
   const floorGeometry = new THREE.PlaneGeometry(8, 14);
   // @ts-ignore
@@ -97,11 +99,13 @@ function init() {
   container.appendChild(renderer.domElement);
   // @ts-ignore
   document.body.appendChild(VRButton.createButton(renderer));
+  //
+  headset = renderer.xr.getCamera();
   // controllers
   controller1 = renderer.xr.getController(0);
-  user.add(controller1);
+  player.add(controller1);
   controller2 = renderer.xr.getController(1);
-  user.add(controller2);
+  player.add(controller2);
   // @ts-ignore
   const controllerModelFactory = new XRControllerModelFactory();
   // @ts-ignore
@@ -109,17 +113,17 @@ function init() {
   // Hand 1
   controllerGrip1 = renderer.xr.getControllerGrip(0);
   controllerGrip1.add(controllerModelFactory.createControllerModel(controllerGrip1));
-  user.add(controllerGrip1);
+  player.add(controllerGrip1);
   hand1 = renderer.xr.getHand(0);
   hand1.add(handModelFactory.createHandModel(hand1));
-  user.add(hand1);
+  player.add(hand1);
   // Hand 2
   controllerGrip2 = renderer.xr.getControllerGrip(1);
   controllerGrip2.add(controllerModelFactory.createControllerModel(controllerGrip2));
-  user.add(controllerGrip2);
+  player.add(controllerGrip2);
   hand2 = renderer.xr.getHand(1);
   hand2.add(handModelFactory.createHandModel(hand2));
-  user.add(hand2);
+  player.add(hand2);
   // @ts-ignore
   const tempVector1 = new THREE.Vector3(0, 0, 0);
   // @ts-ignore
@@ -144,13 +148,65 @@ function render() {
   renderer.render(scene, camera);
   // @ts-ignore
   const direction = new THREE.Vector3();
-  camera.getWorldDirection(direction);
+  headset.getWorldDirection(direction);
   // @ts-ignore
   // const yAxis = new THREE.Vector3(0, 1, 0);
   // const angle = Math.PI / 2;
   // direction.applyAxisAngle(yAxis, angle);
-  user.position.x += (direction.x * 0.01);
-  user.position.z += (direction.z * 0.01);
+  player.position.x += (direction.x * 0.01);
+  player.position.z += (direction.z * 0.01);
+  const session = renderer.xr.getSession();
+  // check if the session exists
+  if (session) {
+    const sources = session.inputSources;
+    // check if the session has input sources
+    if (sources){
+      const controllerZero = sources[1];
+      // check that input source zero exists
+      if (controllerZero){
+        const gamepad = controllerZero.gamepad;
+        // check that input source zero has a gamepad
+        if (gamepad){
+          const axes = gamepad.axes;
+          // check that gamepad has axes
+          if (axes){
+            // rotate
+            if (axes[2] < -0.8 && turnEnabled == true){
+              player.rotation.y += Math.PI * 0.25;
+              turnEnabled = false;
+            }
+            if (axes[2] > 0.8 && turnEnabled == true){
+              player.rotation.y -= Math.PI * 0.25;
+              turnEnabled = false;
+            }
+            if (axes[2] > -0.2 && axes[2] < 0.2){
+              turnEnabled = true;
+            }
+            //player.rotation.y += axes[2] * -0.01;
+            // up/down
+            //if (axes.length > 5){
+            //    player.position.z = 5;
+            //}
+            /*
+                      if (axes[0] != 0){
+                          //player.position.z = axes[0] * 2;
+                      }
+                      if (axes[1] != 0){
+                          //player.position.z = axes[1] * 2;
+                      }
+                      if (axes[2] != 0){
+                          */
+            /*
+                      }
+                      if (axes[3] != 0){
+                          //player.position.z = axes[3] * 2;
+                      }
+                      */
+          }
+        }
+      }
+    }
+  }
 }
 function animate() {
   renderer.setAnimationLoop(render);
