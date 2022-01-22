@@ -73,11 +73,11 @@
         scene = new THREE.Scene();
         scene.background = new THREE.Color(0x444444);
         camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 100);
+        camera.rotation.y = (Math.PI * 1.5);
         user = new THREE.Group();
         scene.add(user);
         user.add(camera);
         user.position.set(-1, 0, 0);
-        user.rotation.y = (Math.PI * 1.5);
         const floorGeometry = new THREE.PlaneGeometry(8, 14);
         const floorMaterial = new THREE.MeshStandardMaterial({ color: 0x222222 });
         const floor = new THREE.Mesh(floorGeometry, floorMaterial);
@@ -142,15 +142,11 @@
       }
       function render() {
         renderer.render(scene, camera);
-        // user.position.z += 0.002;
-        // if (user.position.z > 10) {
-        //   user.position.z = 0;
-        // }
         const direction = new THREE.Vector3();
         camera.getWorldDirection(direction);
-        const yAxis = new THREE.Vector3(0, 1, 0);
-        const angle = Math.PI / 2;
-        direction.applyAxisAngle(yAxis, angle);
+        // const yAxis = new THREE.Vector3(0, 1, 0);
+        // const angle = Math.PI / 2;
+        // direction.applyAxisAngle(yAxis, angle);
         user.position.x += (direction.x * 0.01);
         user.position.z += (direction.z * 0.01);
       }

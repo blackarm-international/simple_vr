@@ -57,12 +57,12 @@ function init() {
   scene.background = new THREE.Color(0x444444);
   // @ts-ignore
   camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 100);
+  camera.rotation.y = (Math.PI * 1.5);
   // @ts-ignore
   user = new THREE.Group();
   scene.add(user);
   user.add(camera);
   user.position.set(-1, 0, 0);
-  user.rotation.y = (Math.PI * 1.5);
   // @ts-ignore
   const floorGeometry = new THREE.PlaneGeometry(8, 14);
   // @ts-ignore
@@ -146,9 +146,9 @@ function render() {
   const direction = new THREE.Vector3();
   camera.getWorldDirection(direction);
   // @ts-ignore
-  const yAxis = new THREE.Vector3(0, 1, 0);
-  const angle = Math.PI / 2;
-  direction.applyAxisAngle(yAxis, angle);
+  // const yAxis = new THREE.Vector3(0, 1, 0);
+  // const angle = Math.PI / 2;
+  // direction.applyAxisAngle(yAxis, angle);
   user.position.x += (direction.x * 0.01);
   user.position.z += (direction.z * 0.01);
 }
