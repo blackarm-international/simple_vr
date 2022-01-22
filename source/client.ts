@@ -14,6 +14,29 @@ function onWindowResize() {
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
 }
+function addBoxes() {
+  let boxX: number = 0.0;
+  const boxY: number = 1.8;
+  const boxZ: number = 0.0;
+  let boxGeometry: any;
+  // @ts-ignore
+  const boxMaterial: any = new THREE.MeshStandardMaterial();
+  let boxMesh: any;
+  // @ts-ignore
+  for (let loop = 0; loop < 10; loop += 1) {
+    boxX = loop;
+    // @ts-ignore
+    boxGeometry = new THREE.BoxGeometry(0.1, 0.5, 0.1);
+    // @ts-ignore
+    boxMesh = new THREE.Mesh(boxGeometry, boxMaterial);
+    boxMaterial.color.setRGB(0.5, 0.5, 0.5);
+    boxMesh.position.x = boxX;
+    boxMesh.position.y = boxY;
+    boxMesh.position.z = boxZ;
+    boxMesh.name = 'testing';
+    scene.add(boxMesh);
+  }
+}
 function init() {
   container = document.createElement('div');
   document.body.appendChild(container);
@@ -110,28 +133,12 @@ function init() {
   line.scale.z = 5;
   controller1.add(line.clone());
   controller2.add(line.clone());
-  // add cuboid
-  // @ts-ignore
-  const boxX = 0.1;
-  const boxY = 0.2;
-  const boxZ = 0.3;
-  // @ts-ignore
-  const boxGeometry = new THREE.BoxGeometry(boxX, boxY, boxZ);
-  // @ts-ignore
-  const boxMaterial = new THREE.MeshStandardMaterial();
-  // @ts-ignore
-  boxMaterial.color.setRGB(0.5, 0.5, 0.5);
-  // @ts-ignore
-  const boxMesh = new THREE.Mesh(boxGeometry, boxMaterial);
-  boxMesh.position.x = 1;
-  boxMesh.position.y = 1;
-  boxMesh.position.z = 0;
-  boxMesh.name = 'testing';
-  scene.add(boxMesh);
   // add axis
   // @ts-ignore
   const axisHelper = new THREE.AxisHelper(0.1);
   scene.add(axisHelper);
+  // add boxes
+  addBoxes();
   window.addEventListener('resize', onWindowResize);
 }
 function render() {
