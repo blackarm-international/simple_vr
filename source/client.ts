@@ -48,37 +48,41 @@ function addBoxes() {
 const pageResizeDivs = () => {
   let divElement: HTMLElement | null;
   // the four div dimensions
-  let divHeight: number;
-  let divLeft: number;
-  let divTop: number;
-  let divWidth: number;
-  // text div
-  divElement = document.getElementById('text');
-  if (divElement) {
-    divHeight = (window.innerHeight * 0.8);
-    divLeft = 0;
-    divTop = 0;
-    divWidth = window.innerWidth;
-    divElement.style.height = `${divHeight}px`;
-    divElement.style.left = `${divLeft}px`;
-    divElement.style.top = `${divTop}px`;
-    divElement.style.width = `${divWidth}px`;
-  }
+  let threeHeight: number;
+  let threeLeft: number;
+  let threeTop: number;
+  let threeWidth: number;
+  let textHeight: number;
+  let textLeft: number;
+  let textTop: number;
+  let textWidth: number;
   // threejs div
   divElement = document.getElementById('threejs');
   if (divElement) {
-    divHeight = (window.innerHeight * 0.2);
-    divLeft = 0;
-    divTop = (window.innerHeight * 0.8);
-    divWidth = window.innerWidth;
-    divElement.style.height = `${divHeight}px`;
-    divElement.style.left = `${divLeft}px`;
-    divElement.style.top = `${divTop}px`;
-    divElement.style.width = `${divWidth}px`;
+    threeHeight = (window.innerHeight * 0.8);
+    threeLeft = 0;
+    threeTop = 0;
+    threeWidth = window.innerWidth;
+    divElement.style.height = `${threeHeight}px`;
+    divElement.style.left = `${threeLeft}px`;
+    divElement.style.top = `${threeTop}px`;
+    divElement.style.width = `${threeWidth}px`;
+    camera.aspect = threeWidth / threeHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(threeWidth, threeHeight);
   }
-  camera.aspect = window.innerWidth / (window.innerHeight * 0.2);
-  camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, (window.innerHeight * 0.2));
+  // text div
+  divElement = document.getElementById('text');
+  if (divElement) {
+    textHeight = (window.innerHeight * 0.2);
+    textLeft = 0;
+    textTop = (window.innerHeight * 0.8);
+    textWidth = window.innerWidth;
+    divElement.style.height = `${textHeight}px`;
+    divElement.style.left = `${textLeft}px`;
+    divElement.style.top = `${textTop}px`;
+    divElement.style.width = `${textWidth}px`;
+  }
 };
 function init() {
   container = document.getElementById('threejs');
@@ -203,8 +207,8 @@ function render() {
     const joystickRightHoriz = session.inputSources[1].gamepad.axes[2];
     if (joystickRightHoriz < -0.01 || joystickRightHoriz > 0.01) {
       headset.getWorldDirection(direction);
-      player.position.x += (direction.x * joystickRightHoriz * 0.08);
-      player.position.z += (direction.z * joystickRightHoriz * 0.08);
+      player.position.x += (direction.x * joystickRightHoriz * 0.04);
+      player.position.z += (direction.z * joystickRightHoriz * 0.04);
     }
   }
 }
