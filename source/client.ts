@@ -11,12 +11,7 @@ let controllerGrip1: any;
 let controllerGrip2: any;
 let player: any;
 let turnEnabled: boolean = true;
-// let controls: any;
-function onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
-}
+//
 function addBoxes() {
   let boxX: number = 0.4;
   const boxY: number = 1;
@@ -50,9 +45,44 @@ function addBoxes() {
     }
   }
 }
+const pageResizeDivs = () => {
+  let divElement: HTMLElement | null;
+  // the four div dimensions
+  let divHeight: number;
+  let divLeft: number;
+  let divTop: number;
+  let divWidth: number;
+  // text div
+  divElement = document.getElementById('text');
+  if (divElement) {
+    divHeight = (window.innerHeight * 0.8);
+    divLeft = 0;
+    divTop = 0;
+    divWidth = window.innerWidth;
+    divElement.style.height = `${divHeight}px`;
+    divElement.style.left = `${divLeft}px`;
+    divElement.style.top = `${divTop}px`;
+    divElement.style.width = `${divWidth}px`;
+  }
+  // threejs div
+  divElement = document.getElementById('threejs');
+  if (divElement) {
+    divHeight = (window.innerHeight * 0.2);
+    divLeft = 0;
+    divTop = (window.innerHeight * 0.8);
+    divWidth = window.innerWidth;
+    divElement.style.height = `${divHeight}px`;
+    divElement.style.left = `${divLeft}px`;
+    divElement.style.top = `${divTop}px`;
+    divElement.style.width = `${divWidth}px`;
+  }
+  camera.aspect = window.innerWidth / (window.innerHeight * 0.2);
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, (window.innerHeight * 0.2));
+};
 function init() {
-  container = document.createElement('div');
-  document.body.appendChild(container);
+  container = document.getElementById('threejs');
+  // document.body.appendChild(container);
   // @ts-ignore
   scene = new THREE.Scene();
   // @ts-ignore
@@ -138,39 +168,40 @@ function init() {
   controller2.add(line.clone());
   // add axis
   // @ts-ignore
-  const axisHelper = new THREE.AxisHelper(1);
+  const axisHelper = new THREE.AxesHelper(1);
   scene.add(axisHelper);
   // add boxes
   addBoxes();
-  window.addEventListener('resize', onWindowResize);
+  window.addEventListener('resize', pageResizeDivs);
+  pageResizeDivs();
 }
 function render() {
   // @ts-ignore
-  let direction = new THREE.Vector3();
+  const direction = new THREE.Vector3();
   renderer.render(scene, camera);
   // @ts-ignore
   const session = renderer.xr.getSession();
   // snap turns with left joystick horizontal
   if (session) {
-    let joystickLeftHoriz = session.inputSources[0].gamepad.axes[2];
+    const joystickLeftHoriz = session.inputSources[0].gamepad.axes[2];
     if (joystickLeftHoriz) {
-      if (joystickLeftHoriz < -0.7 && turnEnabled == true){
+      if (joystickLeftHoriz < -0.7 && turnEnabled === true) {
         player.rotation.y += Math.PI * 0.25;
         turnEnabled = false;
       }
-      if (joystickLeftHoriz > 0.7 && turnEnabled == true){
+      if (joystickLeftHoriz > 0.7 && turnEnabled === true) {
         player.rotation.y -= Math.PI * 0.25;
         turnEnabled = false;
       }
-      if (joystickLeftHoriz > -0.4 && joystickLeftHoriz < 0.4){
+      if (joystickLeftHoriz > -0.4 && joystickLeftHoriz < 0.4) {
         turnEnabled = true;
       }
     }
   }
   // forward/backward with right joystick horizontal
   if (session) {
-    let joystickRightHoriz = session.inputSources[1].gamepad.axes[2];
-    if (joystickRightHoriz < -0.01 || joystickRightHoriz > 0.01){
+    const joystickRightHoriz = session.inputSources[1].gamepad.axes[2];
+    if (joystickRightHoriz < -0.01 || joystickRightHoriz > 0.01) {
       headset.getWorldDirection(direction);
       player.position.x += (direction.x * joystickRightHoriz * 0.08);
       player.position.z += (direction.z * joystickRightHoriz * 0.08);
