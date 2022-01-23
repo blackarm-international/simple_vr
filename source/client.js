@@ -125,11 +125,10 @@ function render() {
   let direction = new THREE.Vector3();
   renderer.render(scene, camera);
   const session = renderer.xr.getSession();
-  // snap turns with left joystick
+  // snap turns with left joystick horizontal
   if (session) {
     let joystickLeftHoriz = session.inputSources[0].gamepad.axes[2];
     if (joystickLeftHoriz) {
-      // snap turn
       if (joystickLeftHoriz < -0.7 && turnEnabled == true) {
         player.rotation.y += Math.PI * 0.25;
         turnEnabled = false;
@@ -143,14 +142,11 @@ function render() {
       }
     }
   }
-  // forward/backward with right joystick
+  // forward/backward with right joystick horizontal
   if (session) {
     let joystickRightHoriz = session.inputSources[1].gamepad.axes[2];
     if (joystickRightHoriz < -0.01 || joystickRightHoriz > 0.01) {
       headset.getWorldDirection(direction);
-      // const yAxis = new THREE.Vector3(0, 1, 0);
-      // const angle = Math.PI * -0.5;
-      // direction.applyAxisAngle(yAxis, angle);
       player.position.x += (direction.x * joystickRightHoriz * 0.08);
       player.position.z += (direction.z * joystickRightHoriz * 0.08);
     }
