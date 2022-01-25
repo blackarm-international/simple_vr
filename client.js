@@ -1,5 +1,5 @@
-"use strict";
-const THREE = require('three');
+// @ts-ignore
+import * as THREE from 'three';
 let container;
 let camera;
 let scene;
