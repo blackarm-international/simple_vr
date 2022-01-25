@@ -1,3 +1,4 @@
+import * as THREE from 'three';
 let container: any;
 let camera: any;
 let scene: any;
