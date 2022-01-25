@@ -20,6 +20,6 @@ else
   exit
 fi
 
-# cp imports.js temp.js
-# cat client.js >> temp.js
-# mv temp.js client.js
+cp imports.js temp.js
+cat client.js >> temp.js
+mv temp.js client.js
