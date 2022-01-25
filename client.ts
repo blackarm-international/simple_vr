@@ -1,11 +1,3 @@
-// @ts-ignore
-import * as THREE from 'three';
-// @ts-ignore
-import { VRButton } from '../three.js/examples/jsm/webxr/VRButton';
-// @ts-ignore
-import { XRControllerModelFactory } from '../three.js/examples/jsm/webxr/XRControllerModelFactory';
-// @ts-ignore
-import { XRHandModelFactory } from '../three.js/examples/jsm/webxr/XRHandModelFactory';
 let container: any;
 let camera: any;
 let scene: any;
