@@ -55,7 +55,7 @@ const pageResizeDivs = () => {
   // threejs div
   divElement = document.getElementById('threejs');
   if (divElement) {
-    threeHeight = (window.innerHeight * 0.7);
+    threeHeight = (window.innerHeight * 0.8);
     threeLeft = 0;
     threeTop = 0;
     threeWidth = window.innerWidth;
@@ -70,9 +70,9 @@ const pageResizeDivs = () => {
   // text div
   divElement = document.getElementById('text');
   if (divElement) {
-    textHeight = (window.innerHeight * 0.3);
+    textHeight = (window.innerHeight * 0.2);
     textLeft = 0;
-    textTop = (window.innerHeight * 0.7);
+    textTop = (window.innerHeight * 0.8);
     textWidth = window.innerWidth;
     divElement.style.height = `${textHeight}px`;
     divElement.style.left = `${textLeft}px`;
@@ -182,8 +182,8 @@ function render() {
     const joystickRightHoriz = session.inputSources[1].gamepad.axes[2];
     if (joystickRightHoriz < -0.01 || joystickRightHoriz > 0.01) {
       headset.getWorldDirection(direction);
-      player.position.x += (direction.x * joystickRightHoriz * 0.08);
-      player.position.z += (direction.z * joystickRightHoriz * 0.08);
+      player.position.x += (direction.x * joystickRightHoriz * 0.04);
+      player.position.z += (direction.z * joystickRightHoriz * 0.04);
     }
   }
 }
