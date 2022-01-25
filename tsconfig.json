@@ -3,7 +3,9 @@
         "target": "esnext",
         "noImplicitAny": true,
         "strict": true,
-        "lib": ["esnext","dom"]
+        "lib": ["esnext","dom"],
+        "module": "esnext",
+        "moduleResolution": "node"
     },
     "files" : [
         "client.ts"
